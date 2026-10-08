@@ -68,6 +68,7 @@ export function useAnimeRoulette() {
 
         return
       }
+
     } catch {
       error.value = 'Could not find an anime right now. Please spin again in a moment.'
     } finally {
