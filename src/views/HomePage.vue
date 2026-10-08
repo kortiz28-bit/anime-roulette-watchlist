@@ -1,9 +1,23 @@
 <script setup>
-import {} from 'vue'
+import { computed } from 'vue'
 import AnimeCard from '@/components/AnimeCard.vue'
 import { useAnimeRoulette } from '@/composables/useAnimeRoulette'
 
-const { anime, loading, error, spin } = useAnimeRoulette()
+const { anime, loading, error, spin, cooldownLeft } = useAnimeRoulette()
+
+const spinDisabled = computed(() => loading.value || cooldownLeft.value > 0)
+
+const spinLabel = computed(() => {
+  if (loading.value) {
+    return 'Spinning...'
+  }
+
+  if (cooldownLeft.value > 0) {
+    return `Cooldown ${cooldownLeft.value}s`
+  }
+
+  return 'Spin 🎰'
+})
 </script>
 
 <template>
@@ -12,10 +26,10 @@ const { anime, loading, error, spin } = useAnimeRoulette()
   >
     <div class="mx-auto max-w-7xl">
       <header class="mb-8">
-        <p class="text-sx font-semibold tracking-[0.3cm] text-cyan-300/90 uppercase">Project #4</p>
+        <p class="text-xs font-semibold tracking-[0.3cm] text-cyan-300/90 uppercase">Project #4</p>
         <h1 class="mt-2 text-4xl font-black text-white sm:text-5xl">Anime Roulette Machine</h1>
         <p class="mt-2 max-w-3xl text-sm text-slate-300 sm:text-base">
-          Spin the reel, request a random anime from Jikan with VueUse useFech, and learnhow REST
+          Spin the reel, request a random anime from Jikan with VueUse useFetch, and learn how REST
           APIs signal rate limiting with HTTP 429.
         </p>
       </header>
@@ -34,12 +48,19 @@ const { anime, loading, error, spin } = useAnimeRoulette()
               </div>
               <button
                 type="button"
-                class="cursor-pointer rounded-full border border-cyan-300/70 bg-cyan-400/20 px-6 py-3 text-base font-black tracking-wide text-cyan-100 hover:bg-cyan-400/30"
+                :disabled="spinDisabled"
+                class="cursor-pointer rounded-full border border-cyan-300/70 bg-cyan-400/20 px-6 py-3 text-base font-black tracking-wide text-cyan-100 hover:bg-cyan-400/30 disabled:cursor-not-allowed disabled:opacity-60"
                 @click="spin"
               >
-                Spin
-              </button>
-            </div>
+                  {{ spinLabel }}
+                </button>
+              </div>
+              <p
+                v-if="cooldownLeft > 0"
+                class="mt-4 rounded-xl border border-amber-300/50 bg-amber-400/10 px-3 py-2 text-sm font-semibold text-amber-100"
+              >
+                Rate-limited. Try again in {{ cooldownLeft }}s.
+              </p>
           </div>
           <AnimeCard
             :loading="loading"
