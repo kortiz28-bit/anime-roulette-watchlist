@@ -1,22 +1,22 @@
 <script setup>
+import {} from 'vue'
 import AnimeCard from '@/components/AnimeCard.vue'
+import { useAnimeRoulette } from '@/composables/useAnimeRoulette'
 
-const spin = () => {
-  console.log('Hello')
-}
+const { anime, loading, error, spin } = useAnimeRoulette()
 </script>
 
 <template>
-  <main 
+  <main
     class="min-h-screen bg-[radial-gradient(circle_at_15%_20%,#334155,transparent_40%),radial-gradient(circle_at_85%_0%,#0f766e,transparent_28%),linear-gradient(160deg,#020617,#0f172a,#111827)] px-4 py-8 text-slate-100 sm:px-6 lg:px-8"
-    >
+  >
     <div class="mx-auto max-w-7xl">
       <header class="mb-8">
         <p class="text-sx font-semibold tracking-[0.3cm] text-cyan-300/90 uppercase">Project #4</p>
         <h1 class="mt-2 text-4xl font-black text-white sm:text-5xl">Anime Roulette Machine</h1>
         <p class="mt-2 max-w-3xl text-sm text-slate-300 sm:text-base">
-           Spin the reel, request a random anime from Jikan with VueUse useFech, and learnhow REST 
-           APIs signal rate limiting with HTTP 429.
+          Spin the reel, request a random anime from Jikan with VueUse useFech, and learnhow REST
+          APIs signal rate limiting with HTTP 429.
         </p>
       </header>
 
@@ -32,7 +32,7 @@ const spin = () => {
                   Pull the lever for your next random anime recommendation.
                 </p>
               </div>
-              <button 
+              <button
                 type="button"
                 class="cursor-pointer rounded-full border border-cyan-300/70 bg-cyan-400/20 px-6 py-3 text-base font-black tracking-wide text-cyan-100 hover:bg-cyan-400/30"
                 @click="spin"
@@ -41,7 +41,11 @@ const spin = () => {
               </button>
             </div>
           </div>
-          <AnimeCard loading />
+          <AnimeCard
+            :loading="loading"
+            :error="error"
+            :anime="anime"
+          />
         </section>
       </div>
     </div>
