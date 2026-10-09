@@ -1,7 +1,7 @@
 import { useFetch, useCountdown } from '@vueuse/core'
 import { ref } from 'vue'
 
-const URL = 'https://api.jikan.moe/v4/random/anime'
+const URL = 'https://api.tenrai.org/v1/random/anime'
 const MAX_SAFE_SPIN_ATTEMPTS = 5
 const RETRY_SECONDS = 10
 
@@ -16,8 +16,8 @@ export function useAnimeRoulette() {
   const loading = ref(false)
   const error = ref('')
   const { remaining: cooldownLeft, start: startCooldown } = useCountdown(0, {
-  interval: 1000,
-})
+    interval: 1000,
+  })
 
   const spin = async () => {
     if (loading.value || cooldownLeft.value > 0) return
